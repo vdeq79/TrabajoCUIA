@@ -1,0 +1,60 @@
+\documentclass[twoside]{article}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{tikz}
+\usepackage{centernot}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{lipsum}
+\usepackage{subcaption}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+\usepackage{xurl}
+\usepackage[top=1in, bottom=1.5in, left=1in, right=1in]{geometry}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[L]{\leftmark}
+\fancyfoot{}
+\fancyfoot[C]{\thepage}
+\newcommand{\enquote}[1]{``#1''}
+\usepackage{float}
+\usepackage[parfill]{parskip}
+\newcommand{\image}[2]{
+\begin{figure}[H]
+    \includegraphics[width=#1 cm]{../images/#2.png}
+    \centering
+\end{figure}
+}
+
+\title{Trabajo CUIA: Propuesta}
+\author{XuSheng Zheng}
+\date{}
+
+\begin{document}
+
+\maketitle
+\section{Descripción general de la aplicación}
+Se trata de una aplicación que servirá como cambiador de ropa virtual.
+
+En primer lugar se modelará el cuerpo de las personas mediante las imágenes obtenidas a partir de una cámara. En segundo lugar se construirán modelos de ropa a elegir por el usuario sobre el modelo de la persona y se proyectarán en la pantalla sobre el cuerpo del usuario. El usuario podrá modificar la talla de la ropa o cambiar de ropa mediante peticiones. 
+
+El objetivo de esta aplicación es reducir las devoluciones de las compras online debido al desconocimiento sobre los tamaños reales de los artículos.
+
+\section{Papel que juegan las tecnologías}
+\subsection{Reconocimiento e identificación de imágenes}
+La aplicación reconocerá el cuerpo del usuario generando un modelo adaptado a ello.
+\subsection{Procesado de lenguaje natural}
+El usuario podrá solicitar cambiar de talla o de ropa mediante la voz.
+\subsection{Realidad aumentada}
+La aplicación generará los modelos virtuales de los artículos con diferentes tallas sobre el modelo del usuario y lo proyectará sobre la imagen captada por la cámara.
+
+\end{document}
