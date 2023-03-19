@@ -43,18 +43,18 @@
 
 \maketitle
 \section{Descripción general de la aplicación}
-Se trata de una aplicación que servirá como cambiador de ropa virtual.
+Se trata de una aplicación que servirá como cambiador de ropa virtual. La plataforma elegida es Windows con lenguajes de desarrollo Python y C\#.
 
-En primer lugar se modelará el cuerpo de las personas mediante las imágenes obtenidas a partir de una cámara. En segundo lugar se construirán modelos de ropa a elegir por el usuario sobre el modelo de la persona y se proyectarán en la pantalla sobre el cuerpo del usuario. El usuario podrá modificar la talla de la ropa o cambiar de ropa mediante peticiones. 
+En primer lugar se modelará el cuerpo del usuario mediante las imágenes obtenidas a partir de una webcam. En segundo lugar se construirán modelos de ropa a elegir por el usuario sobre el modelo de la persona y se proyectarán en la pantalla. El usuario podrá modificar la talla o cambiar de ropa mediante peticiones. 
 
 El objetivo de esta aplicación es reducir las devoluciones de las compras online debido al desconocimiento sobre los tamaños reales de los artículos.
 
 \section{Papel que juegan las tecnologías}
 \subsection{Reconocimiento e identificación de imágenes}
-La aplicación reconocerá el cuerpo del usuario generando un modelo adaptado a ello.
+La aplicación reconocerá el cuerpo del usuario generando un modelo adaptado mediante el paquete cvzone de Python y utilidades de Unity.
 \subsection{Procesado de lenguaje natural}
-El usuario podrá solicitar cambiar de talla o de ropa mediante la voz.
+El usuario podrá solicitar cambiar de talla o de ropa mediante voz.
 \subsection{Realidad aumentada}
-La aplicación generará los modelos virtuales de los artículos con diferentes tallas sobre el modelo del usuario y lo proyectará sobre la imagen captada por la cámara.
+La aplicación generará modelos virtuales de ropa con diferentes tallas a eligir sobre el modelo del usuario y los proyectará sobre la imagen captada por la cámara.
 
 \end{document}
