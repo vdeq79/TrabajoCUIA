@@ -43,18 +43,19 @@
 
 \maketitle
 \section{Descripción general de la aplicación}
-Se trata de una aplicación que servirá como cambiador de ropa virtual. La plataforma elegida es Windows con lenguajes de desarrollo Python y C\#.
+Se trata de una aplicación que servirá como diseñador y probador de camisetas. La plataforma elegida es Windows con lenguaje de desarrollo Python.
 
-En primer lugar se modelará el cuerpo del usuario mediante las imágenes obtenidas a partir de una webcam. En segundo lugar se construirán modelos de ropa a elegir por el usuario sobre el modelo de la persona y se proyectarán en la pantalla. El usuario podrá modificar la talla o cambiar de ropa mediante peticiones. 
+En primer lugar se modelará el cuerpo del usuario mediante las imágenes obtenidas a partir de una webcam. En segundo lugar se construirá un modelo de camiseta ajustado al cuerpo del usuario con imágenes (o colores, figuras incluso vídeos) a elegir por el usuario sobre el modelo de la persona y se proyectarán en la pantalla. El usuario podrá modificar la imagen proyectada mediante peticiones de voz. 
 
-El objetivo de esta aplicación es reducir las devoluciones de las compras online debido al desconocimiento sobre los tamaños reales de los artículos.
+El objetivo de esta aplicación es poder probar diseños de camisetas sin la necesidad de fabricar prototipos expresamente. También está pensado para entretener ya que los usuarios podrán utilizarlo para generar grabaciones con estilos de camisetas a su gusto.
 
 \section{Papel que juegan las tecnologías}
 \subsection{Reconocimiento e identificación de imágenes}
-La aplicación reconocerá el cuerpo del usuario generando un modelo adaptado mediante el paquete cvzone de Python y utilidades de Unity.
+La aplicación reconocerá el cuerpo del usuario generando un modelo adaptado utilizando el paquete cvzone de Python.
 \subsection{Procesado de lenguaje natural}
-El usuario podrá solicitar cambiar de talla o de ropa mediante voz.
+El usuario podrá solicitar cambiar la imagen proyectada mediante voz.
 \subsection{Realidad aumentada}
-La aplicación generará modelos virtuales de ropa con diferentes tallas a eligir sobre el modelo del usuario y los proyectará sobre la imagen captada por la cámara.
+La aplicación generará un modelo de camiseta ajustado que acompaña al movimiento con imagen proyectada a eligir sobre el usuario.
+
 
 \end{document}
