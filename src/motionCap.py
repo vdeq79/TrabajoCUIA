@@ -61,7 +61,6 @@ if cap.isOpened():
                 p5 = np.array([1/2*(lmList[24][1]+p2[0]), lmList[24][2]]).astype(int)
                 
 
-                #points = np.array([p1,p2,p3,p4,p5,p6,p7,p8], np.int32)
 
                 points = np.array([p2,p1,p8,p7,p6,p5,p4,p3], np.int32)
 
@@ -73,21 +72,37 @@ if cap.isOpened():
                 #dst_points = np.array([p2,p1,p6,p5],int) 
 
 
-                src_points = np.array([[1/5*src_w,0], [4/5*src_w,0], [src_w, 1/3*src_h], [4/5*src_w, 1/3*src_h], [4/5*src_w, src_h], [1/5*src_w, src_h], [1/5*src_w, 1/3*src_w], [0,1/3*src_w]],np.int32)
+                src_points = np.array([[1/5*src_w,0], [4/5*src_w,0], [src_w, 1/3*src_h], [4/5*src_w, 1/3*src_h], [4/5*src_w, src_h], [1/5*src_w, src_h], [1/5*src_w, 1/3*src_h], [0,1/3*src_h]],np.int32)
+
+                #src_points = np.array([[1/5*src_w,0], [4/5*src_w,0],[src_w,1/3*src_h],[src_w, 0.4*src_h ],[src_w, src_h], [1/5*src_w, src_h], [0,0.4*src_h], [0,1/3*src_h]], np.int32)
+
+                mask = np.zeros(tshirt.shape[:2], dtype=np.uint8)
+                cv2.drawContours(mask, [src_points], -1, (255,255,255), -1, cv2.LINE_AA)
+
+
+
+                res = cv2.bitwise_or(tshirt, tshirt, mask=mask)
+                cv2.imshow("Samed size black image", res)
                 dst_points = points
                 #print(dst_points)
 
                 matrix2, _ = cv2.findHomography(srcPoints=src_points, dstPoints=dst_points)
-                warp_image = cv2.warpPerspective(tshirt, matrix2, (framerecortado.shape[1], framerecortado.shape[0]))
+                warp_image = cv2.warpPerspective(res, matrix2, (framerecortado.shape[1], framerecortado.shape[0]))
+
+
 
                 points = points.reshape(-1,1,2)
-                #cv2.fillPoly(framerecortado, [points], color=(255,255,255))
 
-
+                cv2.polylines(framerecortado, points, True, (255,0,0), 8, cv2.LINE_AA)
                 cv2.fillConvexPoly(framerecortado,dst_points, (0,0,0) )
-                #cv2.imshow("warp", warp_image)
+
+                #mask += warp_image
+                cv2.imshow("mask", mask)
+
+                cv2.imshow("warp", warp_image)
 
                 framerecortado+=warp_image
+
 
 
             cv2.imshow("RECORTADO", framerecortado)
