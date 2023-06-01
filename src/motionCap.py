@@ -70,6 +70,7 @@ if cap.isOpened():
                 nuevo_h = p5[1]-p2[1]
                 nuevo_dim = (nuevo_w, nuevo_h)
 
+
                 tshirt = cv2.resize(original, nuevo_dim, interpolation=cv2.INTER_AREA)
 
                 src_h, src_w = tshirt.shape[:2]
@@ -88,15 +89,37 @@ if cap.isOpened():
                 #matrix2, _ = cv2.findHomography(srcPoints=src_points, dstPoints=dst_points)
                 #warp_image = cv2.warpPerspective(res, matrix2, (framerecortado.shape[1], framerecortado.shape[0]))
 
-                nueva_ventana = np.zeros(framerecortado.shape[:2], dtype=np.uint8)
+
                 points = points.reshape(-1,1,2)
 
                 cv2.polylines(framerecortado, points, True, (255,0,0), 8, cv2.LINE_AA)
                 cv2.fillConvexPoly(framerecortado,dst_points, (0,0,0) )
 
+                #nueva_ventana = framerecortado.copy()
+                #nueva_ventana[nueva_ventana!=0] = 255
+                nueva_ventana = np.zeros(framerecortado.shape, dtype=np.uint8)
+                #print("1",p3[0],p8[0])
+                #print("2",p2[1],p5[1])
+                #print("3",p2[0],p5[0])
+                #print(nueva_ventana.shape)
 
-                cv2.polylines(nueva_ventana, points, True, (255,0,0), 8, cv2.LINE_AA)
-                cv2.fillConvexPoly(nueva_ventana,dst_points, (255,0,0) )
+                #print([nueva_ventana.shape[1]-p2[1], nuevo_h ])
+                cv2.fillConvexPoly(nueva_ventana,dst_points, (255,255,255) )
+                rectangulo = nueva_ventana[p2[1]:np.min([p5[1], nueva_ventana.shape[0]] ), p3[0]:p8[0]]
+                auxiliar = rectangulo + tshirt[0:np.min([nueva_ventana.shape[0]-p2[1], nuevo_h ]),]
+
+                #usar and en lugar de sumar directamente
+                nueva_ventana[p2[1]:np.min([p5[1], nueva_ventana.shape[0]] ), p3[0]:p8[0]]=cv2.bitwise_and(rectangulo, tshirt[0:np.min([nueva_ventana.shape[0]-p2[1], nuevo_h ]),])
+
+                #nueva_ventana[p2[1]:np.min([p5[1], nueva_ventana.shape[0]] ), p3[0]:p8[0]] = [auxiliar[i] if np.any(rectangulo[i]==0) else rectangulo[i] for i in range(len(rectangulo))]
+
+                '''for i in range(rectangulo.shape[0]):
+                    for j in range(rectangulo.shape[1]):
+                        if np.all(rectangulo[i,j]==0):
+                            rectangulo[i,j]=auxiliar[i,j]'''
+                
+                
+
                 #mask += warp_image
                 cv2.imshow("mask", nueva_ventana)
                 
