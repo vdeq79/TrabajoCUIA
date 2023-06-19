@@ -9,7 +9,7 @@ else:
     print("Es necesario realizar la calibración de la cámara")
     exit()
 
-from functions import *
+from model import *
 
 lena = cv2.imread("../lena.tif")
 

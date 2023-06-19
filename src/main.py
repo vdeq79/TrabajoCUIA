@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import os
 from cvzone.PoseModule import PoseDetector
-from functions import *
+from model import *
 
 
 if os.path.exists('camara.py'):
