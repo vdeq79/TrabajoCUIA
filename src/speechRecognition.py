@@ -1,60 +1,45 @@
 import speech_recognition as sr
-import time
 import pyttsx3 as tts
+import settings 
 
 def change_voice(engine):
     for voice in engine.getProperty('voices'):
-        if "SPANISH" in voice.name.upper() or "ESPAÑOL" in voice.name.upper():
+        if "SPANISH" in voice.name.upper() or "ESPAÑOL" in voice.name.upper() or 'es_ES' in voice.languages:
             engine.setProperty('voice', voice.id)
-            return True
+            break
 
+def recognizeCommand():
+    recognizer = sr.Recognizer()
+    mic = sr.Microphone()
+    speaker = tts.init()
+    err_msg = "Lo siento, no he podido entenderte"
+    speaker.setProperty('rate', 145)
+    change_voice(speaker)
 
-r = sr.Recognizer()
-mic = sr.Microphone()
-sp = tts.init()
-sp.setProperty('rate', 145)
-change_voice(sp)
+    while not settings.FINAL:
+        try:
+            with mic as source:
+                recognizer.adjust_for_ambient_noise(source, duration=0.2)
+                audio = recognizer.listen(source,phrase_time_limit=3)
+                recognition = recognizer.recognize_google(audio, language="es-ES", show_all=True)
+                response = "Unable to recognize speech"
 
+                if len(recognition)>0:
+                    print(recognition)
+                    if recognition['alternative'][0]['confidence']>0.65:
+                        response = recognition['alternative'][0]['transcript']
+                        print(recognition['alternative'][0])
+                    else:
+                        speaker.say(err_msg)
+                        speaker.runAndWait()
 
+        except sr.RequestError:
+            response = "API unavailable"
+        except sr.UnknownValueError:
+            response = "Unable to recognize speech"
+        except sr.WaitTimeoutError:
+            response = "Timeout"
+        except ConnectionError:
+            response = "Error de conexión"
 
-while True:
-
-    try:
-        with mic as source:
-            start_time = time.time()
-            r.adjust_for_ambient_noise(source, duration=0.2)
-            print("1 --- %s seconds ---" % (time.time() - start_time))
-            start_time = time.time()
-            audio = r.listen(source,phrase_time_limit=3)
-            print("2 --- %s seconds ---" % (time.time() - start_time))
-            start_time = time.time()
-            response = r.recognize_google(audio, language="es-ES", show_all=True)
-            print("3 --- %s seconds ---" % (time.time() - start_time))
-            sp.say(response['alternative'][0]['transcript'])
-            sp.runAndWait()
-            print(response['alternative'][0])
-
-    except sr.RequestError:
-        response = "API unavailable"
-        r = sr.Recognizer()
-        sp.say(response)
-        sp.runAndWait()
-        continue
-    except sr.UnknownValueError:
-        response = "Unable to recognize speech"
-        sp.say(response)
-        sp.runAndWait()
-        continue
-    except sr.WaitTimeoutError:
-        response = "Timeout"
-        sp.say(response)
-        sp.runAndWait()
-        continue
-    except ConnectionError:
-        response = "Error de conexión"
-        sp.say(response)
-        sp.runAndWait()
-        r = sr.Recognizer()
-        continue
-
-
+        #print(response)
