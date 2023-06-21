@@ -6,7 +6,7 @@ import settings
 def getShirtModelPoints(lmList):
     
     #Obtener los tamaños según la talla actual
-    size = settings.SIZE[settings.TALLA]
+    size = settings.SIZE[settings.CURRENT_TALLA]
     half_size = size/2
 
     #Subimos los puntos de los hombros según la talla
@@ -17,8 +17,8 @@ def getShirtModelPoints(lmList):
     diff1 = np.subtract(lmList[13][1:3],lmList[11][1:3])
     diff2 = np.subtract(lmList[14][1:3],lmList[12][1:3])
 
-    p8 = np.array(p1 + 2/3*diff1+[size,-half_size]).astype(int)
-    p3 = np.array(p2 + 2/3*diff2+[-size,-half_size]).astype(int)
+    p8 = np.array(p1 + 2/3*diff1+[size,0]).astype(int)
+    p3 = np.array(p2 + 2/3*diff2+[-size,0]).astype(int)
 
     #Para las esquinas P4 y P7, fijamos un mínimo de 30 en Y por si el codo y el hombre están muy juntos
     p7 = np.add(p1, [0, np.absolute(3/4*diff1[1]) if np.absolute(diff1[1])>30 else 30 ]).astype(int)

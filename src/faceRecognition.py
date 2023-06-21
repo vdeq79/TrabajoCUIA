@@ -1,8 +1,7 @@
 import face_recognition as face
 import cv2 
-import os
 import settings
-import time
+import speechRecognition as xsr
 
 def recognizeUser(frame):
 
@@ -23,12 +22,15 @@ def recognizeUser(frame):
                 color = (0, 255, 0)
                 settings.USER_RECOGNIZED = True
                 settings.CURRENT_USER = settings.USER_NAMES[index]
-                print(settings.CURRENT_USER)
+                xsr.sayMsg("Bienvenido "+settings.CURRENT_USER)
+                break
+
             else:
                 color = (0, 0, 255)
 
             t, r, b, l = locs[i]
             cv2.rectangle(frame, (l*4,t*4), (r*4,b*4), color, 2)
+
 
     settings.CURRENT_TRY+=1
     return(frame)
