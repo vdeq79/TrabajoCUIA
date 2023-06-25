@@ -8,18 +8,20 @@ from model import *
 import speechRecognition as xsr
 import faceRecognition as xface
 
+camara_imported=True
+
 if os.path.exists(os.path.join(settings.DIR_NAME, 'camara.py')):
     import camara
 else:
     print("Es necesario realizar la calibración de la cámara")
-    exit()
+    camara_imported = False
 
 cap = cv2.VideoCapture(0)
 detector = PoseDetector()
-#original = cv2.imdecode(np.fromfile(os.path.join(settings.ROOT_DIR, 'img', 'zebra.jpg'), dtype=np.uint8), cv2.IMREAD_UNCHANGED)
 
 settings.init()
 settings.initImages()
+
 
 xsr.sayMsg("Intentando detectar usuario, espere por favor")
 thread = threading.Thread(target=xsr.recognizeCommand)
@@ -30,16 +32,20 @@ if cap.isOpened():
     wframe = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     print("Tamaño del frame de la cámara: ", wframe, "x", hframe)
 
-    matrix, roi = cv2.getOptimalNewCameraMatrix(camara.cameraMatrix, camara.distCoeffs, (wframe,hframe), 1, (wframe,hframe))
-    roi_x, roi_y, roi_w, roi_h = roi
+    if camara_imported:
+        matrix, roi = cv2.getOptimalNewCameraMatrix(camara.cameraMatrix, camara.distCoeffs, (wframe,hframe), 1, (wframe,hframe))
+        roi_x, roi_y, roi_w, roi_h = roi
 
     while not settings.FINAL:
         ret, framebgr = cap.read()
 
         if ret:
-            # Aquí procesamos el frame
-            framerectificado = cv2.undistort(framebgr, camara.cameraMatrix, camara.distCoeffs, None, matrix)
-            framerecortado = framerectificado[roi_y : roi_y + roi_h, roi_x : roi_x + roi_w]
+            if camara_imported:
+                # Aquí procesamos el frame
+                framerectificado = cv2.undistort(framebgr, camara.cameraMatrix, camara.distCoeffs, None, matrix)
+                framerecortado = framerectificado[roi_y : roi_y + roi_h, roi_x : roi_x + roi_w]
+            else:
+                framerecortado = framebgr
 
             if not settings.USER_RECOGNIZED and settings.CURRENT_TRY<settings.MAX_TRIES:
                 framerecortado = xface.recognizeUser(framerecortado)
@@ -53,11 +59,12 @@ if cap.isOpened():
 
                 if bboxInfo:
                     points = getShirtModelPoints(lmList)
-                    tratado, shirt_window = getImageInShirt(points, settings.IMAGES[settings.CURRENT_IMG_POS], framerecortado.shape)
+                    
+                    tratado, shirt_window = getImageInShirt(points, settings.CURRENT_IMG, framerecortado.shape)
 
                     if tratado:
                         #Pintamos la camiseta de negro
-                        cv2.fillConvexPoly(framerecortado,points, (0,0,0) )
+                        cv2.drawContours(framerecortado, np.array([points]), -1, (0,0,0), thickness=-1 )
                         #Juntamos ambas ventanas
                         framerecortado = cv2.bitwise_or(framerecortado, shirt_window )
 
@@ -70,4 +77,5 @@ if cap.isOpened():
 else:
     print("No se pudo acceder a la cámara.")
 
+settings.saveUserPreferences()
 thread.join()

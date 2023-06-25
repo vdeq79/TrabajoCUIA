@@ -17,16 +17,16 @@ def getShirtModelPoints(lmList):
     diff1 = np.subtract(lmList[13][1:3],lmList[11][1:3])
     diff2 = np.subtract(lmList[14][1:3],lmList[12][1:3])
 
-    p8 = np.array(p1 + 2/3*diff1+[size,0]).astype(int)
-    p3 = np.array(p2 + 2/3*diff2+[-size,0]).astype(int)
+    p8 = np.array(p1 + diff1+[size,0]).astype(int)
+    p3 = np.array(p2 + diff2+[-size,0]).astype(int)
 
     #Para las esquinas P4 y P7, fijamos un mínimo de 30 en Y por si el codo y el hombre están muy juntos
-    p7 = np.add(p1, [0, np.absolute(3/4*diff1[1]) if np.absolute(diff1[1])>30 else 30 ]).astype(int)
-    p4 = np.add(p2, [0, np.absolute(3/4*diff2[1]) if np.absolute(diff2[1])>30 else 30 ]).astype(int)
+    p7 = np.add(p1, [0, np.absolute(diff1[1]) if np.absolute(diff1[1])>40 else 40]).astype(int)
+    p4 = np.add(p2, [0, np.absolute(diff2[1]) if np.absolute(diff2[1])>40 else 40]).astype(int)
     
     #Las esquinas inferiores son un poco menos anchas que las caderas del modelo humano
-    p6 = np.array([1/2*(lmList[23][1]+p1[0]), lmList[23][2]]).astype(int)
-    p5 = np.array([1/2*(lmList[24][1]+p2[0]), lmList[24][2]]).astype(int)
+    p6 = np.array([1/2*(lmList[23][1]+p1[0])+half_size, lmList[23][2]+half_size]).astype(int)
+    p5 = np.array([1/2*(lmList[24][1]+p2[0])-half_size, lmList[24][2]+half_size]).astype(int)
     
     #Puntos finales para la camiseta en el orden para ser construido
     points = np.array([p2,p1,p8,p7,p6,p5,p4,p3], np.int32)
@@ -58,7 +58,7 @@ def getImageInShirt(points, img, frame_shape, show_resized_img=False, show_shirt
             cv2.imshow("Resized image",resized_img)
 
         #Pintamos la camiseta de blanco
-        cv2.fillConvexPoly(shirt_window, points, (255,255,255) )
+        cv2.drawContours(shirt_window, np.array([points]), -1, (255,255,255), thickness=-1 )
 
         #Determinar el rectángulo que inscribe a la camiseta en la ventana, tomando desde los puntos mínimos de la camiseta hasta los mínimos entre los puntos máximos de la camiseta y los bordes de la ventana
         rectangulo = shirt_window[min_h:np.min([max_h, shirt_window.shape[0]] ), min_w:np.min([max_w, shirt_window.shape[1]] )]

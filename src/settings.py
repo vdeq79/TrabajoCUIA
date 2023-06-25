@@ -2,6 +2,7 @@ import os
 import cv2
 import numpy as np
 import face_recognition as face
+import json
 
 global TALLA
 TALLA = ['XS', 'S', 'M', 'L', 'XL']
@@ -16,6 +17,7 @@ DIR_NAME = os.path.dirname(__file__)
 global ROOT_DIR
 ROOT_DIR= os.path.realpath(os.path.join(DIR_NAME, '..'))
 
+GENERAL_USER_NAME = 'GENERAL_USER'
 
 def init():
     #Se ha reconocido el usuario
@@ -60,17 +62,69 @@ def init():
 
     #Usuario general
     global CURRENT_USER 
-    CURRENT_USER = 'GENERAL_USER'
+    CURRENT_USER = GENERAL_USER_NAME
 
 def initImages():
-    global IMAGES
-    IMAGES = []
+    global IMAGES_NAMES
+    global IMG_FOLDER
+    global CURRENT_IMG_NAME
+
+    CURRENT_IMG_NAME = None
+    IMAGES_NAMES = []
     IMG_FOLDER = os.path.join(ROOT_DIR, 'img')
 
     for filename in os.listdir( IMG_FOLDER ):
         #Utilizo esta función en caso de que la ruta contenga caracteres especiales
-        img = cv2.imdecode(np.fromfile(os.path.join(IMG_FOLDER, filename), dtype=np.uint8), cv2.IMREAD_UNCHANGED) 
-        IMAGES.append(img)
+        IMAGES_NAMES.append(filename) 
+        
+    CURRENT_IMG_NAME = IMAGES_NAMES[0]
+    loadImage()
 
-    global CURRENT_IMG_POS
-    CURRENT_IMG_POS = 0
+def loadUserPreferences():
+    global USER_PREFERENCE
+    global CURRENT_TALLA
+    global CURRENT_IMG_NAME
+    USER_PREFERENCE = {}
+
+    PREFERENCE_FILE = os.path.join(ROOT_DIR, 'usr', 'preference.json')
+    if(os.path.exists(PREFERENCE_FILE)):
+        f = open(PREFERENCE_FILE)
+        USER_PREFERENCE = json.load(f)
+        
+        if CURRENT_USER in USER_PREFERENCE:
+            CURRENT_TALLA = USER_PREFERENCE[CURRENT_USER]['TALLA']
+            CURRENT_IMG_NAME = USER_PREFERENCE[CURRENT_USER]['IMAGE']
+            loadImage()
+        else:
+            USER_PREFERENCE[CURRENT_USER] = {'TALLA': CURRENT_TALLA, 'IMAGE': CURRENT_IMG_NAME}
+
+        f.close()
+
+
+def saveUserPreferences():
+    if (CURRENT_USER!=GENERAL_USER_NAME):
+        PREFERENCE_FILE = os.path.join(ROOT_DIR, 'usr', 'preference.json')
+        USER_PREFERENCE[CURRENT_USER] = {'TALLA': CURRENT_TALLA, 'IMAGE': CURRENT_IMG_NAME}
+
+        with open(PREFERENCE_FILE, 'w+') as outfile:
+            json.dump(USER_PREFERENCE, outfile)
+
+def loadImage():
+    global CURRENT_IMG
+    global CURRENT_IMG_NAME
+    #Prevención de errores
+    try:
+        Index = IMAGES_NAMES.index(CURRENT_IMG_NAME)
+    except ValueError:
+        Index = 0
+        CURRENT_IMG_NAME = IMAGES_NAMES[Index]
+
+    for i in range(len(IMAGES_NAMES)):
+        try:
+            CURRENT_IMG = cv2.imdecode(np.fromfile(os.path.join(IMG_FOLDER, CURRENT_IMG_NAME), dtype=np.uint8), cv2.IMREAD_UNCHANGED)
+        except:
+            Index = Index+1
+            CURRENT_IMG_NAME = IMAGES_NAMES[Index]
+            continue
+        break
+    

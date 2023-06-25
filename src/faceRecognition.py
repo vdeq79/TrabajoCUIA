@@ -23,14 +23,13 @@ def recognizeUser(frame):
                 settings.USER_RECOGNIZED = True
                 settings.CURRENT_USER = settings.USER_NAMES[index]
                 xsr.sayMsg("Bienvenido "+settings.CURRENT_USER)
+                settings.loadUserPreferences()
                 break
-
             else:
                 color = (0, 0, 255)
 
             t, r, b, l = locs[i]
             cv2.rectangle(frame, (l*4,t*4), (r*4,b*4), color, 2)
-
 
     settings.CURRENT_TRY+=1
     return(frame)
