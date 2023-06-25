@@ -1,0 +1,8 @@
+numpy
+opencv-contrib-python
+cvzone
+face_recognition
+SpeechRecognition
+mediapipe
+pyttsx3
+PyAudio

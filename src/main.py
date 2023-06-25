@@ -22,7 +22,6 @@ detector = PoseDetector()
 settings.init()
 settings.initImages()
 
-
 xsr.sayMsg("Intentando detectar usuario, espere por favor")
 thread = threading.Thread(target=xsr.recognizeCommand)
 thread.start()
@@ -69,6 +68,7 @@ if cap.isOpened():
                         framerecortado = cv2.bitwise_or(framerecortado, shirt_window )
 
             if(settings.USER_RECOGNIZED):
+                #framerecortado = cv2.resize(framerecortado, (1500,1080), interpolation=cv2.INTER_AREA)
                 cv2.imshow("main", framerecortado)
             if cv2.waitKey(1) == ord(' '):
                 settings.FINAL = True

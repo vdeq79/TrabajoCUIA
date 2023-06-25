@@ -22,7 +22,7 @@ def getShirtModelPoints(lmList):
 
     #Para las esquinas P4 y P7, fijamos un mínimo de 30 en Y por si el codo y el hombre están muy juntos
     p7 = np.add(p1, [0, np.absolute(diff1[1])+half_size if np.absolute(diff1[1])>40 else 40+half_size]).astype(int)
-    p4 = np.add(p2, [0, np.absolute(diff2[1])-half_size if np.absolute(diff2[1])>40 else 40-half_size]).astype(int)
+    p4 = np.add(p2, [0, np.absolute(diff2[1])+half_size if np.absolute(diff2[1])>40 else 40-half_size]).astype(int)
     
     #Las esquinas inferiores son un poco menos anchas que las caderas del modelo humano
     p6 = np.array([1/2*(lmList[23][1]+p1[0])+half_size, lmList[23][2]+half_size]).astype(int)
