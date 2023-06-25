@@ -30,12 +30,12 @@
 \usepackage[parfill]{parskip}
 \newcommand{\image}[2]{
 \begin{figure}[H]
-    \includegraphics[width=#1 cm]{../images/#2.png}
+    \includegraphics[width=#1 cm]{./#2.PNG}
     \centering
 \end{figure}
 }
 
-\title{Trabajo CUIA: Propuesta}
+\title{Trabajo CUIA}
 \author{XuSheng Zheng}
 \date{}
 
@@ -43,19 +43,34 @@
 
 \maketitle
 \section{Descripción general de la aplicación}
-Se trata de una aplicación que servirá como diseñador y probador de camisetas. La plataforma elegida es Windows con lenguaje de desarrollo Python.
+Se trata de una aplicación que servirá como probador de diseños de camisetas. La plataforma elegida es Windows con lenguaje de desarrollo Python. Para ejecutar la aplicación, basta ejecutar en la terminal \textbf{python main.py}, estando \textit{main.py} en el directorio \textit{src}.
 
-En primer lugar se modelará el cuerpo del usuario mediante las imágenes obtenidas a partir de una webcam. En segundo lugar se construirá un modelo de camiseta ajustado al cuerpo del usuario con imágenes (o colores, figuras incluso vídeos) a elegir por el usuario sobre el modelo de la persona y se proyectarán en la pantalla. El usuario podrá modificar la imagen proyectada mediante peticiones de voz. 
+En primer lugar se modelará el cuerpo del usuario mediante las imágenes obtenidas a partir de una webcam. En segundo lugar se construirá un modelo de camiseta ajustado al cuerpo del usuario con imágenes sobre el modelo de la persona y se proyectarán en la pantalla. El usuario podrá modificar la imagen proyectada y el tamaño de la camiseta mediante peticiones de voz. Podemos ver un ejemplo de la ejecución en la siguiente imagen:
+\image{10}{Captura}
 
-El objetivo de esta aplicación es poder probar diseños de camisetas sin la necesidad de fabricar prototipos expresamente. También está pensado para entretener ya que los usuarios podrán utilizarlo para generar grabaciones con estilos de camisetas a su gusto.
+El objetivo de esta aplicación es poder probar diseños de camisetas sin la necesidad de fabricar prototipos expresamente. También está pensado para entretener ya que los usuarios podrán utilizarlo para probar camisetas con imágenes a su gusto.
 
-\section{Papel que juegan las tecnologías}
 \subsection{Reconocimiento e identificación de imágenes}
-La aplicación reconocerá el cuerpo del usuario generando un modelo adaptado utilizando el paquete cvzone de Python.
+La aplicación reconocerá el cuerpo del usuario generando un modelo adaptado utilizando el paquete cvzone de Python. También intentará reconocer la cara del usuario al entrar en la aplicación. Una vez reconocido, la aplicación leerá la información almacenada desde la última ejecución por parte del usuario sobre la talla y la imagen que se proyecta. Sólo se intentará reconocer al usuario al inicio de la aplicación, esto se ha decidido para no sobrecargar la aplicación con reconocimientos constantes. Al salir de la aplicación, si se trata de un usuario reconocido, se guardará la talla y la imagen que se proyecta hasta ese momento.
 \subsection{Procesado de lenguaje natural}
-El usuario podrá solicitar cambiar la imagen proyectada mediante voz.
-\subsection{Realidad aumentada}
-La aplicación generará un modelo de camiseta ajustado que acompaña al movimiento con imagen proyectada a eligir sobre el usuario.
+El usuario podrá solicitar cambiar la imagen proyectada o el tamaño de la camiseta mediante voz. La aplicación intentará captar órdenes del usuario en franjas de 3 segundos. En caso de reconocer la orden del usuario, se informará de la acción realizada mediante un asistente de voz. En caso de no reconocerlo, se informará por la terminal. 
 
+Esto se ha decidido para no saturar al usuario con notificaciones constantes. Pues las razones por las que no se reconocen una orden puede ser muy variadas: que el usuario no esté hablando, debido a interferencias o por errores de conexión del propio reconocedor.
+\subsection{Realidad aumentada}
+La aplicación generará un modelo de camiseta ajustado sobre el usuario que acompaña al movimiento con imagen proyectada a eligir. Si no se detecta correctamente el modelo del usuario o algunos puntos del modelo puede conllevar a errores se deja de proyectar la camiseta. Esto se ha decidido para no interrumpir el programa por errores. Para una correcta proyección se tiene que poder captar la parte superior incluida la cabeza del usuario. Por ello, se recomienda estar a una cierta distancia de la cámara.
+
+\section{Requisitos}
+Para la correcta ejecución de la aplicación se necesita debido a compatibilidad la versión de Python 3.7.9 con los siguientes paquetes:
+\begin{itemize}
+    \item numpy = 1.21.6
+    \item opencv-contrib-python = 4.7.0.72
+    \item cvzone = 1.5.6
+    \item face\_recognition = 1.3.0
+    \item SpeechRecognition = 3.9.0
+    \item mediapipe = 0.9.0.1
+    \item pyttsx3 = 2.90
+    \item PyAudio = 0.2.13
+    \item matplotlib = 3.5.3
+\end{itemize}
 
 \end{document}
